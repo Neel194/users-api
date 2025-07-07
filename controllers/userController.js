@@ -16,4 +16,31 @@ const createUser = (req, res) => {
     res.status(201).json({ message: "User created", user: newUser })
 }
 
-module.exports = { getUsers, createUser };   // exports the getUsers and createUser
+// upate user
+const updateUser = (req, res) => {
+    const { id } = req.params
+    const { name } = req.body
+
+    const user = users.find(u => u.id == id)
+    if (!user) {
+        return res.status(404).json({ message: "User not found" })
+    }
+    user.name = name
+    res.json({ message: "User updated", user })
+}
+
+// delete user
+const deleteUser = (req, res) => {
+    const { id } = req.params
+    const index = users.findIndex(u => u.id == id)
+
+    if (index == -1) {
+        return res.status(404).json({ message: "User not found" })
+    }
+
+    const deletedUser = users.splice(index, 1)
+    res.json({ message: "User deleted", user: deletedUser[0] })
+}
+
+
+module.exports = { getUsers, createUser, updateUser, deleteUser };
