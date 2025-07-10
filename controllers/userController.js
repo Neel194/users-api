@@ -25,7 +25,6 @@ const createUser = async (req, res, next) => {
     try {
         const { name, email } = req.body;  // get name and email from body
         const user = await User.create({ name, email })
-
         res.status(201).json({ success: true, user })
     } catch (err) {
         next(err)
@@ -34,11 +33,22 @@ const createUser = async (req, res, next) => {
 
 // get user by ID
 
-const getUserById = async (req, res) => {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
-    res.json({ success: true, user });
-};
+const getUserById = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            const error = new Error("User not found");
+            error.statusCode = 404;
+            return next(error);
+        }
+
+        res.status(200).json({ success: true, user });
+    } catch (err) {
+        next(err);
+    }
+}
+
 
 
 // upate user
