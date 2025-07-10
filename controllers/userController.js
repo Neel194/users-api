@@ -5,6 +5,7 @@ const User = require('../models/User')
 const getUsers = async (req, res, next) => {
     try {
         const users = await User.find()
+
         res.status(200).json({ success: true, users });
     } catch (err) {
         next(err)  // send error to global error handler
@@ -25,6 +26,7 @@ const createUser = async (req, res, next) => {
     try {
         const { name, email } = req.body;  // get name and email from body
         const user = await User.create({ name, email })
+
         res.status(201).json({ success: true, user })
     } catch (err) {
         next(err)
@@ -49,20 +51,24 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-
-
 // upate user
 const updateUser = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params
+
         const user = await User.findByIdAndUpdate(id, req.body, {
             new: true,
             runValidators: true,
         });
-        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        if (!user) {
+            const error = new Error("User not found")
+            error.statusCode = 404
+            return next(error)
+        }
         res.json({ success: true, user });
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+        next(err)
     }
 }
 
