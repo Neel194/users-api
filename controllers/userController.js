@@ -3,8 +3,12 @@ const User = require('../models/User')
 
 // get all the users
 const getUsers = async (req, res) => {
-    const users = await User.find()
-    res.json({ success: true, users });
+    try {
+        const users = await User.find()
+        res.status(200).json({ success: true, users });
+    } catch (err) {
+        next(err)  // send error to global error handler
+    }
 }
 
 // create new users
