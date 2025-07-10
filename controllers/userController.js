@@ -74,8 +74,6 @@ const updateUser = async (req, res) => {
 
 // delete user
 const deleteUser = async (req, res) => {
-    const { id } = req.params
-
     // for dummy data
     // const index = users.findIndex(u => u.id == id)
     // if (index == -1) {
@@ -85,9 +83,21 @@ const deleteUser = async (req, res) => {
     // res.json({ message: "User deleted", user: deletedUser[0] })
 
     // from database
+    try {
+        const { id } = req.params
+        const user = await User.findByIdAndDelete(id)
 
-    const user = await User.findByIdAndDelete(id)
-    if (!user) return res.status(404).json({ success: false, message: "User not found" })
+        if (!user) {
+            const error = new Error("User not found")
+            error.statusCode = 404
+            return next(error)
+        }
+        res.status(200).json({ success: true, message: "User deleted" })
+    } catch (error) {
+        next(err)
+    }
+
+
     res.json({ success: true, message: "User deleted" });
 }
 
