@@ -2,7 +2,7 @@
 const User = require('../models/User')
 
 // get all the users
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
     try {
         const users = await User.find()
         res.status(200).json({ success: true, users });
@@ -12,8 +12,7 @@ const getUsers = async (req, res) => {
 }
 
 // create new users
-const createUser = async (req, res) => {
-    const { name, email } = req.body;  // get name from body
+const createUser = async (req, res, next) => {
     // for dummy data
     // const newUser = {   
     //     id: Date.now(),
@@ -22,13 +21,14 @@ const createUser = async (req, res) => {
     // users.push(newUser);  // add newUser into users(dummy data)
     // res.status(201).json({ message: "User created", user: newUser })
 
-
     // from database
     try {
+        const { name, email } = req.body;  // get name and email from body
         const user = await User.create({ name, email })
+
         res.status(201).json({ success: true, user })
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+        next(err)
     }
 }
 
