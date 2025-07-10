@@ -52,7 +52,7 @@ const getUserById = async (req, res, next) => {
 }
 
 // upate user
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params
 
@@ -73,7 +73,7 @@ const updateUser = async (req, res) => {
 }
 
 // delete user
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
     // for dummy data
     // const index = users.findIndex(u => u.id == id)
     // if (index == -1) {
@@ -96,9 +96,6 @@ const deleteUser = async (req, res) => {
     } catch (error) {
         next(err)
     }
-
-
-    res.json({ success: true, message: "User deleted" });
 }
 
 
