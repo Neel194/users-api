@@ -4,6 +4,7 @@ const { config } = require("dotenv")
 const connectDB = require("./config/db")
 const dotenv = require('dotenv')
 const errorHandler = require("./middlewares/errorHandler")
+const authRoutes = require("./routes/authRoutes")
 
 dotenv.config()
 connectDB()
@@ -12,6 +13,7 @@ const app = express()
 app.use(express.json()) // body parser
 
 app.use("/api", userRoutes)
+app.use("/api/auth", authRoutes)
 
 app.use(errorHandler)  // GLOBAL error middleware
 
