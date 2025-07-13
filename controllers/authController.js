@@ -78,4 +78,11 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login };
+const logout = async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully.Please remove token on client."
+    })
+}
+
+module.exports = { register, login, logout };
