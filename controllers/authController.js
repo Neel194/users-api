@@ -85,4 +85,11 @@ const logout = async (req, res, next) => {
     })
 }
 
-module.exports = { register, login, logout };
+const getProfile = (req, res) => {
+    res.status(200).json({
+        success: true,
+        user: req.user
+    })
+}
+
+module.exports = { register, login, logout, getProfile };
