@@ -15,10 +15,10 @@ const { createUserSchema, UpdateUserSchema } = require("../validations/userValid
 // router.delete("/:id", deleteUser)
 
 
-router.post("/users", validate(createUserSchema), createUser);
-router.get("/users", getUsers);
-router.get("/users/:id", getUserById);
-router.put("/users/:id", validate(UpdateUserSchema), updateUser);
-router.delete("/users/:id", deleteUser);
+router.post("/users", validate(createUserSchema), createUser)
+router.get("/users", getUsers)
+router.get("/users/:id", getUserById)
+router.put("/users/:id", validate(UpdateUserSchema), updateUser)
+router.delete("/users/:id", deleteUser)
 
-module.exports = router;
+module.exports = router
