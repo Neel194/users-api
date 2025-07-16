@@ -62,8 +62,8 @@ const createUser = async (req, res, next) => {
 
     // from database
     try {
-        const { name, email } = req.body;  // get name and email from body
-        const user = await User.create({ name, email })
+        const { name, email, password } = req.body;  // get name and email from body
+        const user = await User.create({ name, email, password })
 
         res.status(201).json({ success: true, user })
     } catch (err) {
