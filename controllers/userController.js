@@ -1,23 +1,23 @@
 // const users = require("../data/users")  // access dummy data
-const User = require('../models/User')
+const User = require('../models/User');
 
 // get all the users and specific user
 const getUsers = async (req, res, next) => {
     try {
         const {
-            search = "",
+            search = '',
             role,
             page = 1,
             limit = 10,
-            sortBy = "createdAt",
-            order = "desc"
+            sortBy = 'createdAt',
+            order = 'desc',
         } = req.query;
 
         const query = {};
 
         // Search by name
         if (search) {
-            query.name = { $regex: search, $options: "i" };
+            query.name = { $regex: search, $options: 'i' };
         }
 
         // Filter by role
@@ -26,13 +26,14 @@ const getUsers = async (req, res, next) => {
         }
 
         const skip = (page - 1) * limit;
-        const sortOrder = order === "asc" ? 1 : -1;
+        const sortOrder = order === 'asc' ? 1 : -1;
 
         // Execute query with sort, skip, limit
         const users = await User.find(query)
             .sort({ [sortBy]: sortOrder })
             .skip(skip)
-            .limit(parseInt(limit));
+            .limit(parseInt(limit))
+            .populate('orderCount');
 
         const total = await User.countDocuments(query);
 
@@ -41,19 +42,17 @@ const getUsers = async (req, res, next) => {
             total,
             page: parseInt(page),
             limit: parseInt(limit),
-            users
+            users,
         });
-
     } catch (err) {
         next(err);
     }
 };
 
-
 // create new users
 const createUser = async (req, res, next) => {
     // for dummy data
-    // const newUser = {   
+    // const newUser = {
     //     id: Date.now(),
     //     name
     // }
@@ -62,14 +61,14 @@ const createUser = async (req, res, next) => {
 
     // from database
     try {
-        const { name, email, password } = req.body;  // get name and email from body
-        const user = await User.create({ name, email, password })
+        const { name, email, password } = req.body; // get name and email from body
+        const user = await User.create({ name, email, password });
 
-        res.status(201).json({ success: true, user })
+        res.status(201).json({ success: true, user });
     } catch (err) {
-        next(err)
+        next(err);
     }
-}
+};
 
 // get user by ID
 
@@ -78,7 +77,7 @@ const getUserById = async (req, res, next) => {
         const user = await User.findById(req.params.id);
 
         if (!user) {
-            const error = new Error("User not found");
+            const error = new Error('User not found');
             error.statusCode = 404;
             return next(error);
         }
@@ -87,12 +86,12 @@ const getUserById = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-}
+};
 
 // upate user
 const updateUser = async (req, res, next) => {
     try {
-        const { id } = req.params
+        const { id } = req.params;
 
         const user = await User.findByIdAndUpdate(id, req.body, {
             new: true,
@@ -100,15 +99,15 @@ const updateUser = async (req, res, next) => {
         });
 
         if (!user) {
-            const error = new Error("User not found")
-            error.statusCode = 404
-            return next(error)
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            return next(error);
         }
         res.json({ success: true, user });
     } catch (err) {
-        next(err)
+        next(err);
     }
-}
+};
 
 // delete user
 const deleteUser = async (req, res, next) => {
@@ -122,19 +121,18 @@ const deleteUser = async (req, res, next) => {
 
     // from database
     try {
-        const { id } = req.params
-        const user = await User.findByIdAndDelete(id)
+        const { id } = req.params;
+        const user = await User.findByIdAndDelete(id);
 
         if (!user) {
-            const error = new Error("User not found")
-            error.statusCode = 404
-            return next(error)
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            return next(error);
         }
-        res.status(200).json({ success: true, message: "User deleted" })
+        res.status(200).json({ success: true, message: 'User deleted' });
     } catch (error) {
-        next(err)
+        next(err);
     }
-}
-
+};
 
 module.exports = { getUsers, createUser, getUserById, updateUser, deleteUser };
