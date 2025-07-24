@@ -1,23 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/upload');
+const upload = require('../middlewares/cloudinaryUpload');
 
 // upload route
 
-router.post('/image', upload.single('file'), (req, res) => {
-    if (!req.file) {
+router.post('/image', upload.single('image'), (req, res) => {
+    if (!req.file || !req.file.path) {
         return res
             .status(400)
-            .json({ success: false, message: 'No file uploaded' });
+            .json({ success: false, message: 'Upload failed' });
     }
     res.status(200).json({
         success: true,
-        message: 'File upload successfully',
-        file: {
-            filename: req.file.filename,
-            path: `/uploads/${req.file.filename}`,
-            mimetype: req.file.mimetype,
-        },
+        message: 'Image uploaded to cloudinary',
+        imageUrl: req.file.path,
     });
 });
 
